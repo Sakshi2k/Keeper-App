@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import AddIcon from '@material-ui/icons/Add';
+import Fab from '@material-ui/core/Fab';
+import Zoom from '@material-ui/core/Zoom';
 
 function CreateArea(props) {
   const [titleText, setTitle] = useState("");
   const [contentText, setContent] = useState("");
+  const [cursorClicked, setCursorClicked] = useState(false);
 
   function handleChange1(event) {
     var newTitle = event.target.value;
@@ -16,32 +20,37 @@ function CreateArea(props) {
 
   return (
     <div>
-      <form>
+      <form className="create-note">
         <input
           name="title"
           onChange={handleChange1}
           placeholder="Title"
           value={titleText}
+          onClick={() => {setCursorClicked(true)}}
+          autocomplete="off"
           required
         />
-        <textarea
+        {cursorClicked && <textarea                                   // conditionally rendering
           name="content"
           placeholder="Take a note..."
           rows="3"
           onChange={handleChange2}
           value={contentText}
-          required
-        />
-        <button
-          onClick={(event) => {
-            props.addNote(titleText, contentText);
-            setTitle("");
-            setContent("");
-            event.preventDefault();
-          }}
-        >
-          Add
-        </button>
+          autocomplete="off"
+        /> }
+        <Zoom in={cursorClicked}>
+          <Fab
+            onClick={(event) => {
+              props.addNote(titleText, contentText);
+              setTitle("");
+              setContent("");
+              // event.preventDefault();
+              setCursorClicked(false)
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        </Zoom>
       </form>
     </div>
   );
